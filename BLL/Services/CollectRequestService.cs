@@ -47,7 +47,7 @@ namespace BLL.Services
             return repo.Update(id, mapped);
         }
 
-        public List<CollectRequestModel> GetAssignedTasks(int employeeId)
+        public List<CollectRequestModel> GetAllTasks(int employeeId)
         {
             var data = repo.GetAllTasksForEmployee(employeeId);
             var mapped = mapper.Map<List<CollectRequestModel>>(data);

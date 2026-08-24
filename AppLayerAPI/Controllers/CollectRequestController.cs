@@ -111,13 +111,13 @@ namespace AppLayerAPI.Controllers
             return BadRequest(new { Message = "Failed to collect. Invalid request or not assigned to you." });
         }
 
-        [HttpGet("employee/{employeeId}/assigned")]
-        public IActionResult GetAssignedTasks(int employeeId)
+        [HttpGet("employee/{employeeId}/all")]
+        public IActionResult GetAllTasks(int employeeId)
         {
-            var tasks = service.GetAssignedTasks(employeeId);
+            var tasks = service.GetAllTasks(employeeId);
             if (tasks.Count == 0)
             {
-                return Ok(new { Message = "You have no pending assignments at the moment." });
+                return Ok(new { Message = "You have no tasks." });
             }
 
             return Ok(tasks);
