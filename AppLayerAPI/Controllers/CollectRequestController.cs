@@ -41,7 +41,7 @@ namespace AppLayerAPI.Controllers
         public IActionResult Update(int id, CollectRequestModel r)
         {
             var res = service.Update(id, r);
-            return Ok("Updated");
+            return Ok("Updated1");
         }
 
         [HttpPost]
