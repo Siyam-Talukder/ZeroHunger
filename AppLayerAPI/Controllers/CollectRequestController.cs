@@ -70,25 +70,57 @@ namespace AppLayerAPI.Controllers
         [HttpPut("{requestId}/complete/{employeeId}")]
         public IActionResult Complete(int requestId, int employeeId)
         {
-            var isSuccess = service.CompleteRequest(requestId, employeeId);
-            if (isSuccess)
+            var result = service.CompleteRequest(requestId, employeeId);
+
+            if (result == "Success")
             {
-                return Ok(new { Message = "Request completed successfully." });
+                return Ok(new { Message = "Request completed successfully. Food was delivered on time!" });
+            }
+            else if (result == "Expired")
+            {
+                return BadRequest(new { Message = "Food expired!" });
             }
 
-            return BadRequest(new { Message = "Failed to complete. Request might not exist, or it is not in 'Assigned' status." });
+            return BadRequest(new { Message = "Failed to complete. Request might not exist, or it is not assigned to you." });
+        }
+
+        [HttpPut("{requestId}/accept/{employeeId}")]
+        public IActionResult Accept(int requestId, int employeeId)
+        {
+            var isSuccess = service.AcceptTask(requestId, employeeId);
+            if (isSuccess) return Ok(new { Message = "Task accepted! Proceed to the restaurant." });
+            return BadRequest(new { Message = "Failed to accept task." });
         }
 
         [HttpPut("{requestId}/cancel/{employeeId}")]
         public IActionResult Cancel(int requestId, int employeeId)
         {
-            var isSuccess = service.CancelAssignment(requestId, employeeId);
-            if (isSuccess)
+            var isSuccess = service.CancelTask(requestId, employeeId);
+            if (isSuccess) return Ok(new { Message = "Task cancelled. It has been returned to the pending pool." });
+            return BadRequest(new { Message = "Failed to cancel task." });
+        }
+
+        [HttpPut("{requestId}/pickup/{employeeId}")]
+        public IActionResult PickUpFood(int requestId, int employeeId)
+        {
+            var result = service.CollectFood(requestId, employeeId);
+
+            if (result == "Success") return Ok(new { Message = "Food successfully collected from the restaurant." });
+            if (result == "Expired") return BadRequest(new { Message = "Too late! The food has expired." });
+
+            return BadRequest(new { Message = "Failed to collect. Invalid request or not assigned to you." });
+        }
+
+        [HttpGet("employee/{employeeId}/assigned")]
+        public IActionResult GetAssignedTasks(int employeeId)
+        {
+            var tasks = service.GetAssignedTasks(employeeId);
+            if (tasks.Count == 0)
             {
-                return Ok(new { Message = "Assignment cancelled successfully." });
+                return Ok(new { Message = "You have no pending assignments at the moment." });
             }
 
-            return BadRequest(new { Message = "Failed to cancel assignment. Request might not exist, or it is not in 'Assigned' status." });
+            return Ok(tasks);
         }
 
     }

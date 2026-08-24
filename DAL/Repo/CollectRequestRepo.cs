@@ -53,5 +53,14 @@ namespace DAL.Repo
             old.CompletedAt = res.CompletedAt;
             return db.SaveChanges() > 0;
         }
+
+        public List<CollectRequest> GetAllTasksForEmployee(int employeeId)
+        {
+            var data = (from req in db.CollectRequests
+                        where req.EmployeeId == employeeId
+                        select req).ToList();
+
+            return data;
+        }
     }
 }

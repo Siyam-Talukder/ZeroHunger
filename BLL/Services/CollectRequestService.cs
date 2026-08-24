@@ -47,6 +47,12 @@ namespace BLL.Services
             return repo.Update(id, mapped);
         }
 
+        public List<CollectRequestModel> GetAssignedTasks(int employeeId)
+        {
+            var data = repo.GetAllTasksForEmployee(employeeId);
+            var mapped = mapper.Map<List<CollectRequestModel>>(data);
+            return mapped;
+        }
 
         // Restaurant Action
         public bool Create(CollectRequestModel r)
@@ -80,9 +86,8 @@ namespace BLL.Services
             return repo.Update(requestId, request);
         }
 
-
-        //Employee action 1
-        public bool CompleteRequest(int requestId, int employeeId)
+        // Employee accepts 
+        public bool AcceptTask(int requestId, int employeeId)
         {
             var request = repo.GetById(requestId);
 
@@ -91,13 +96,12 @@ namespace BLL.Services
                 return false;
             }
 
-            request.Status = "Completed";
-            request.CompletedAt = DateTime.Now;
+            request.Status = "Accepted";
             return repo.Update(requestId, request);
         }
 
-        //Employee action 2
-        public bool CancelAssignment(int requestId, int employeeId)
+        // Employee Cancel
+        public bool CancelTask(int requestId, int employeeId)
         {
             var request = repo.GetById(requestId);
 
@@ -108,10 +112,51 @@ namespace BLL.Services
 
             request.EmployeeId = null;
             request.Status = "Pending";
-
             return repo.Update(requestId, request);
         }
 
+        //Employee action 2
+        public string CollectFood(int requestId, int employeeId)
+        {
+            var request = repo.GetById(requestId);
+            if (request == null || request.Status != "Assigned" || request.EmployeeId != employeeId)
+            {
+                return "Invalid";
+            }
 
+            if (DateTime.Now > request.MaxPreservationTime)
+            {
+                request.Status = "Expired";
+                repo.Update(requestId, request);
+                return "Expired";
+            }
+
+            request.Status = "Collected";
+            repo.Update(requestId, request);
+            return "Success";
+        }
+
+        //Employee action 3
+        public string CompleteRequest(int requestId, int employeeId)
+        {
+            var request = repo.GetById(requestId);
+
+            if (request == null || request.Status != "Collected" || request.EmployeeId != employeeId)
+            {
+                return "Invalid";
+            }
+            request.CompletedAt = DateTime.Now;
+
+            if (DateTime.Now > request.MaxPreservationTime)
+            {
+                request.Status = "Expired";
+                repo.Update(requestId, request);
+                return "Expired";
+            }
+
+            request.Status = "Completed";
+            repo.Update(requestId, request);
+            return "Success";
+        }
     }
 }
