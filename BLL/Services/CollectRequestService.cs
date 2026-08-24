@@ -81,7 +81,7 @@ namespace BLL.Services
         }
 
 
-        //Employee action
+        //Employee action 1
         public bool CompleteRequest(int requestId, int employeeId)
         {
             var request = repo.GetById(requestId);
@@ -96,6 +96,22 @@ namespace BLL.Services
             return repo.Update(requestId, request);
         }
 
-        
+        //Employee action 2
+        public bool CancelAssignment(int requestId, int employeeId)
+        {
+            var request = repo.GetById(requestId);
+
+            if (request == null || request.Status != "Assigned" || request.EmployeeId != employeeId)
+            {
+                return false;
+            }
+
+            request.EmployeeId = null;
+            request.Status = "Pending";
+
+            return repo.Update(requestId, request);
+        }
+
+
     }
 }

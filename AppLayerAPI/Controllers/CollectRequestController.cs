@@ -78,5 +78,18 @@ namespace AppLayerAPI.Controllers
 
             return BadRequest(new { Message = "Failed to complete. Request might not exist, or it is not in 'Assigned' status." });
         }
+
+        [HttpPut("{requestId}/cancel/{employeeId}")]
+        public IActionResult Cancel(int requestId, int employeeId)
+        {
+            var isSuccess = service.CancelAssignment(requestId, employeeId);
+            if (isSuccess)
+            {
+                return Ok(new { Message = "Assignment cancelled successfully." });
+            }
+
+            return BadRequest(new { Message = "Failed to cancel assignment. Request might not exist, or it is not in 'Assigned' status." });
+        }
+
     }
 }
