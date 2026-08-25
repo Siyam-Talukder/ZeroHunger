@@ -137,6 +137,13 @@ namespace BLL.Services
         {
             var request = repo.GetById(requestId);
 
+            if (request != null && request.Status == "Expired")
+            {
+                request.Status = "Expired";
+                repo.Update(requestId, request);
+                return "Expired";
+            }
+
             if (request == null || request.Status != "Collected" || request.EmployeeId != employeeId)
             {
                 return "Invalid";

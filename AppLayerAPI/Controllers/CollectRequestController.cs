@@ -109,7 +109,7 @@ namespace AppLayerAPI.Controllers
             if (result == "Success") return Ok(new { Message = "Food successfully collected from the restaurant." });
             if (result == "Expired") return BadRequest(new { Message = "Too late! The food has expired." });
 
-            return BadRequest(new { Message = "Failed to collect. Invalid request or not assigned to you." });
+            return BadRequest(new { Message = "Failed to collect. Invalid request or not assigned to you or you did not accept the task." });
         }
 
 
