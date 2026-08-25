@@ -47,9 +47,9 @@ namespace BLL.Services
             return repo.Update(id, mapped);
         }
 
-        public List<CollectRequestModel> GetAllTasks(int employeeId)
+        public List<CollectRequestModel> GetAssignedTasks(int employeeId)
         {
-            var data = repo.GetAllTasksForEmployee(employeeId);
+            var data = repo.GetAssignedTasksForEmployee(employeeId);
             var mapped = mapper.Map<List<CollectRequestModel>>(data);
             return mapped;
         }
@@ -58,10 +58,6 @@ namespace BLL.Services
         public bool Create(CollectRequestModel r)
         {
             var mapped = mapper.Map<CollectRequest>(r);
-            if (mapped.MaxPreservationTime <= DateTime.Now)
-            {
-                return false;
-            }
 
             mapped.Status = "Pending";
             mapped.CreatedAt = DateTime.Now;
@@ -105,7 +101,7 @@ namespace BLL.Services
         {
             var request = repo.GetById(requestId);
 
-            if (request == null || request.Status != "Assigned" || request.EmployeeId != employeeId)
+            if (request == null || (request.Status != "Assigned" && request.Status != "Accepted") || request.EmployeeId != employeeId)
             {
                 return false;
             }
@@ -119,7 +115,7 @@ namespace BLL.Services
         public string CollectFood(int requestId, int employeeId)
         {
             var request = repo.GetById(requestId);
-            if (request == null || request.Status != "Assigned" || request.EmployeeId != employeeId)
+            if (request == null || request.Status != "Accepted" || request.EmployeeId != employeeId)
             {
                 return "Invalid";
             }

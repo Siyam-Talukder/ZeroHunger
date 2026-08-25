@@ -54,10 +54,10 @@ namespace DAL.Repo
             return db.SaveChanges() > 0;
         }
 
-        public List<CollectRequest> GetAllTasksForEmployee(int employeeId)
+        public List<CollectRequest> GetAssignedTasksForEmployee(int employeeId)
         {
             var data = (from req in db.CollectRequests
-                        where req.EmployeeId == employeeId
+                        where req.EmployeeId == employeeId && req.Status == "Assigned"
                         select req).ToList();
 
             return data;
