@@ -1,0 +1,42 @@
+1. api/restaurant - post
+
+{
+  "name": "Star Kabab",
+  "address": "Banani, Dhaka",
+  "phone": "01700000000"
+}
+{
+  "name": "Sultan's Dine",
+  "address": "Dhanmondi, Dhaka",
+  "phone": "01822222222"
+}
+-------------------------------------------------------------------------------
+2. api/employee - post
+{
+  "name": "Abdur Rahman",
+  "phone": "01800000000"
+}
+{
+  "name": "Siyam",
+  "phone": "01933333333"
+}
+-------------------------------------------------------------------------------
+3. api/collectrequest - post
+{
+  "foodDescription": "50 boxes of leftover biryani",
+  "quantity": 50,
+  "maxPreservationTime": "2026-08-26T22:00:00.000Z",
+  "restaurantId": 6
+}
+{
+  "foodDescription": "30 packs of Tehari",
+  "quantity": 30,
+  "maxPreservationTime": "2026-08-25T16:00:00.000Z",
+  "restaurantId": 2
+}
+-------------------------------------------------------------------------------
+4.api/CollectRequest/assign/3 - put
+{
+    "employeeId": 2
+}
+
